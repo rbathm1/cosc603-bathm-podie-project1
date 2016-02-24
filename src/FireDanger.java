@@ -3,6 +3,9 @@
  * the computed National Fire Danger Rating Indexes
  * 
  */
+import java.util.*;
+import java.lang.Math;
+
 public class FireDanger {
 	
 	private double dryingFactor; // drying factor
@@ -12,16 +15,25 @@ public class FireDanger {
 	private double timberSpreadIndex; // timber spread index
 	private double fireLoadRating; // fire load rating
 	private double buildUpIndex; // new build up index
-	private double precipitationValue; // precipation value
+	private double precipitationValue; // precipitation value
+	
+	
+	//output values
+	
+	private double adfm = 99;
+	private double FFM = 99;
+	private double DF = 0; // drying factor returned
+	private double FLOAD = 0; 
 	
 	public FireDanger(ForestConditions forestConditions){
 		// TODO: compute indexes
-		final double [] A = { -0.185900, -0.8590, -0.059660, -0.077373};
-		final double [] B = { 30.0, 19.2, 13.8, 22.5};
-		final double [] C = { 4.5, 12.5, 27.5};
-		final double [] D = { 16.0, 10.0, 7.0, 5.0, 4.0, 3.0};
+		final double A[] = { -0.185900, -0.8590, -0.059660, -0.077373};
+		final double B[] = { 30.0, 19.2, 13.8, 22.5};
+		final double C[] = { 4.5, 12.5, 27.5};
+		final double D[] = { 16.0, 10.0, 7.0, 5.0, 4.0, 3.0};
 		
 		//Equations
+		
 		fuelMoisture = (A*Math.exp(B) ) ;
 		lagFuelMoisture = (.9*fuelMoisture+9.5*Math.exp((-buildUpIndex/50));
 		
@@ -48,4 +60,16 @@ public class FireDanger {
 		}
 		
 	}
+
+
+
+
+	
+	
+}
+
+}
+/**
+ * @param 
+ */
 

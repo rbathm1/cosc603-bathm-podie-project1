@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * The ForestConditions class encapsulates input
  * needed to compute National Fire Danger Rating Indexes
@@ -48,4 +50,24 @@ public class ForestConditions {
 	public HerbStage getHerbState() {
 		return herbState;
 	}
+	
+	//set initial input value
+	public void getUserInput(ForestConditions forestconditions){
+		Scanner userInput = new Scanner(System.in);
+		System.out.println("Enter in Dry Bulb Temperature");
+		this.dryBulbTemp = userInput.nextDouble();
+		System.out.println("Enter in Wet Bulb Temperature");
+		this.wetBulbTemp = userInput.nextDouble();
+		System.out.println("Is it Snowing, yes is true, no is false");
+		this.isSnow = userInput.hasNextBoolean();
+		System.out.println("Enter the current wind speed in miles per hour");
+		this.windSpeed = userInput.nextDouble();
+		System.out.println("Enter in the last value of the buildup index");
+		this.prevBuildUpIndex = userInput.nextDouble();
+		System.out.println("Enter in the current Herb State as follows 1 = Cured, 2 = Transition, 3= Green");
+		this.herbState = getHerbState();
+		
+
 }
+}
+
