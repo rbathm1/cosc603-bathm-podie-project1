@@ -48,33 +48,56 @@ public class ForestConditions {
 	public boolean isSnow() {
 		return isSnow;
 	}
+	
 	public double getWindSpeed() {
 		return windSpeed;
 	}
+	
 	public double getPrevBuildUpIndex() {
 		return prevBuildUpIndex;
 	}
+	
 	public HerbStage getHerbState() {
 		return herbState;
 	}
 	
 	//set initial input value
-	public void getUserInput(ForestConditions forestconditions){
-		Scanner userInput = new Scanner(System.in);
-		System.out.println("Enter in Dry Bulb Temperature");
-		this.dryBulbTemp = userInput.nextDouble();
-		System.out.println("Enter in Wet Bulb Temperature");
-		this.wetBulbTemp = userInput.nextDouble();
-		System.out.println("Is it Snowing, yes is true, no is false");
-		this.isSnow = userInput.hasNextBoolean();
-		System.out.println("Enter the current wind speed in miles per hour");
-		this.windSpeed = userInput.nextDouble();
-		System.out.println("Enter in the last value of the buildup index");
-		this.prevBuildUpIndex = userInput.nextDouble();
-		System.out.println("Enter in the current Herb State as follows 1 = Cured, 2 = Transition, 3= Green");
-		this.herbState = getHerbState();
+	public static ForestConditions createFromCommandLine(){
+		double dryBulbTemp, wetBulbTemp, precipitation, windSpeed, prevBuildUpIndex;
+		boolean isSnow;
+		HerbStage herbState;
 		
-
-}
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.print("Enter dry bulb temperature (degrees Fahrenheit): ");
+		dryBulbTemp = scanner.nextDouble();
+		scanner.nextLine();
+		
+		System.out.print("Enter wet bulb temperature (degrees Fahrenheit): ");
+		wetBulbTemp = scanner.nextDouble();
+		scanner.nextLine();
+		
+		System.out.print("Enter past 24 hours precipitation (inches): ");
+		precipitation = scanner.nextDouble();
+		scanner.nextLine();
+		
+		System.out.print("Enter snow on ground (true/false): ");
+		isSnow = scanner.nextBoolean();
+		scanner.nextLine();
+		
+		System.out.print("Enter wind speed (miles per hour): ");
+		windSpeed = scanner.nextDouble();
+		scanner.nextLine();
+		
+		System.out.print("Enter last buildup index: ");
+		prevBuildUpIndex = scanner.nextDouble();
+		scanner.nextLine();
+		
+		System.out.print("Enter herb state (Cured, Transition, Green): ");
+		herbState = HerbStage.valueOf(scanner.nextLine().toUpperCase());
+		
+		return new ForestConditions(dryBulbTemp, wetBulbTemp, precipitation,
+				isSnow, windSpeed, prevBuildUpIndex, herbState);
+	}
 }
 
