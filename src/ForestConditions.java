@@ -16,16 +16,18 @@ public class ForestConditions {
 	
 	private double dryBulbTemp; // dry bulb temperature in degrees Fahrenheit
 	private double wetBulbTemp; // wet bulb temperature in degrees Fahrenheit
+	private double precipitation; // precipitation in inches
 	private boolean isSnow; // true if snow on ground, otherwise false
 	private double windSpeed; // wind speed in miles per hour
 	private double prevBuildUpIndex; // previous day's build up index
 	private HerbStage herbState; // state of vegetation
 	
-	public ForestConditions(double dryBulbTemp, double wetBulbTemp,
+	public ForestConditions(double dryBulbTemp, double wetBulbTemp, double precipitation,
 			boolean isSnow, double windSpeed, double prevBuildUpIndex,
 			HerbStage herbState) {
 		this.dryBulbTemp = dryBulbTemp;
 		this.wetBulbTemp = wetBulbTemp;
+		this.precipitation = precipitation;
 		this.isSnow = isSnow;
 		this.windSpeed = windSpeed;
 		this.prevBuildUpIndex = prevBuildUpIndex;
@@ -38,6 +40,11 @@ public class ForestConditions {
 	public double getWetBulbTemp() {
 		return wetBulbTemp;
 	}
+	
+	public double getPrecipitation(){
+		return precipitation;
+	}
+	
 	public boolean isSnow() {
 		return isSnow;
 	}
