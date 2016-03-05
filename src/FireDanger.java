@@ -7,9 +7,8 @@ import java.lang.Math;
  */
 public class FireDanger {
 	
+	private FuelMoisture fuelMoisture = new FuelMoisture();
 	private double dryingFactor_ = 0; // the drying factor
-	private double fuelMoisture_ = 99; // fuel moisture
-	private double lagFuelMoisture_ = 99; // adjusted fuel moisture (10-day lag)
 	private double grassSpreadIndex_; // grass spread index
 	private double timberSpreadIndex_; // timber spread index
 	private double fireLoadRating_ = 0; // fire load rating
@@ -51,13 +50,14 @@ public class FireDanger {
 				while(index < 4 && dif - C[index-1] > 0)
 					index++;
 			
-				fuelMoisture_ = B[index-1]*Math.exp(A[index-1]*dif);
+				fuelMoisture.setFuelMoisture_(B[index - 1]
+						* Math.exp(A[index - 1] * dif));
 			}
 			
 			// Calculate the drying factor
 			{
 				int index = 1;
-				while(index < 7 && fuelMoisture_ - D[index-1] > 0){
+				while(index < 7 && fuelMoisture.getFuelMoisture_() - D[index-1] > 0){
 					index++;
 			
 				if(index == 7){
@@ -71,17 +71,20 @@ public class FireDanger {
 			}
 			
 			// Fine fuel moisture must be at least one
-			fuelMoisture_ = Math.max(fuelMoisture_, 1);
+			fuelMoisture.setFuelMoisture_(Math.max(
+					fuelMoisture.getFuelMoisture_(), 1));
 			
 			// Adjust fine fuel moisture for herb stage
 			switch(forestConditions.getHerbState()){
 			case TRANSITION:
 				// Add five percent to fuel moisture for TRANSITION
-				fuelMoisture_ += 5;
+				fuelMoisture
+						.setFuelMoisture_(fuelMoisture.getFuelMoisture_() + 5);
 				break;
 			case GREEN:
 				// Add ten percent to fuel moisture for GREEN
-				fuelMoisture_ += 10;
+				fuelMoisture
+						.setFuelMoisture_(fuelMoisture.getFuelMoisture_() + 10);
 				break;
 			case CURED:
 				// no adjustment for CURED
@@ -101,11 +104,13 @@ public class FireDanger {
 			buildUpIndex_ += dryingFactor_;
 			
 			// Compute adjusted (lag) fuel moisture
-			lagFuelMoisture_ = .9*fuelMoisture_ + 0.5 + 9.5*Math.exp((-buildUpIndex_/50));
+			fuelMoisture.setLagFuelMoisture_(.9
+					* fuelMoisture.getFuelMoisture_() + 0.5 + 9.5
+					* Math.exp((-buildUpIndex_ / 50)));
 			
 			// Compute timber and grass spread indexes
-			timberSpreadIndex_ = computeTimberIndex(forestConditions);
-			grassSpreadIndex_ = computeGrassIndex(forestConditions);
+			timberSpreadIndex_ = fuelMoisture.computeTimberIndex(forestConditions);
+			grassSpreadIndex_ = fuelMoisture.computeGrassIndex(forestConditions);
 			
 			// Compute the fire load rating
 			if(timberSpreadIndex_ > 0 && grassSpreadIndex_ > 0){
@@ -122,65 +127,15 @@ public class FireDanger {
 	
 	
 	
-	/**
-	 * Computes the timber spread index
-	 * 
-	 * @param forestConditions current forest conditions
-	 * @return the computed timber spread index
-	 */
-	private double computeTimberIndex(ForestConditions forestConditions){
-		double timberIndex;
-		if(lagFuelMoisture_ >= 30){
-			// Adjust for fuel moisture greater than 30%
-			timberIndex = 1;
-		}
-		else if(forestConditions.getWindSpeed() < 14){
-			timberIndex = 0.1312*(forestConditions.getWindSpeed()+6) * Math.pow(33 - lagFuelMoisture_, 1.65) - 3;
-		}
-		else{
-			timberIndex = 0.00918*(forestConditions.getWindSpeed() + 14)*Math.pow(33 - lagFuelMoisture_, 1.65) - 3;
-		}
-		
-		// The timber spread index must be within the range of 1-99
-		return Math.max(Math.min(timberIndex, 99), 1);
-	}
-	
-	
-	
-	/**
-	 * Computes the grass spread index
-	 * 
-	 * @param forestConditions current forest conditions
-	 * @return the computed grass spread index
-	 */
-	private double computeGrassIndex(ForestConditions forestConditions){
-		double grassIndex;
-		if(lagFuelMoisture_ >= 30 && fuelMoisture_ >= 30){
-			// Adjust for fuel/lag moisture greater than 30%
-			grassIndex = 1;
-		}
-		else if(forestConditions.getWindSpeed() < 14){
-			grassIndex = 0.1312*(forestConditions.getWindSpeed()+6) * Math.pow(33 - fuelMoisture_, 1.65) - 3;
-		}
-		else{
-			grassIndex = 0.00918*(forestConditions.getWindSpeed() + 14)*Math.pow(33 - fuelMoisture_, 1.65) - 3;
-		}
-		
-		// The grass spread index must be within the range of 1-99
-		return Math.max(Math.min(grassIndex, 99), 1);
-	}	
-	
-	
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("Drying factor: " + dryingFactor_);
 		builder.append("\n");
-		builder.append("Fuel moisture: " + fuelMoisture_);
+		builder.append("Fuel moisture: " + fuelMoisture.getFuelMoisture_());
 		builder.append("\n");
-		builder.append("Adjusted (lag) fuel moisture: " + lagFuelMoisture_);
+		builder.append("Adjusted (lag) fuel moisture: " + fuelMoisture.getLagFuelMoisture_());
 		builder.append("\n");
 		builder.append("Timber spread index: " + timberSpreadIndex_);
 		builder.append("\n");
